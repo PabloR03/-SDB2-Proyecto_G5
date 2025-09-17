@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  # SERVIDOR MAESTRO - Puerto 5432
-  postgres-master:
+  # SERVIDOR POSTGRES - Puerto 5432
+  postgres:
     image: postgres:15-alpine
-    container_name: imdb_postgres_master
+    container_name: imdb_postgres
     environment:
       POSTGRES_DB: imdb_database
       POSTGRES_USER: postgres
@@ -12,16 +12,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_master_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./bd.sql:/docker-entrypoint-initdb.d/01-init.sql
-    # Configuraciones básicas para permitir replicación
-    command: >
-      postgres
-      -c wal_level=replica
-      -c max_wal_senders=3
-      -c max_replication_slots=3
-      -c listen_addresses='*'
-      -c shared_preload_libraries=''
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d imdb_database"]
       interval: 10s
@@ -32,51 +24,8 @@ services:
     networks:
       - postgres_network
 
-  # SERVIDOR ESCLAVO - Puerto 5433  
-  postgres-slave:
-    image: postgres:15-alpine
-    container_name: imdb_postgres_slave
-    environment:
-      POSTGRES_DB: imdb_database
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_slave_data:/var/lib/postgresql/data
-    # Configuración básica - lo demás lo haremos manual
-    command: >
-      postgres
-      -c listen_addresses='*'
-    depends_on:
-      postgres-master:
-        condition: service_healthy
-    restart: unless-stopped
-    networks:
-      - postgres_network
-
-  # PGADMIN para administración visual
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: imdb_pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@imdb.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8080:80"
-    depends_on:
-      postgres-master:
-        condition: service_healthy
-    volumes:
-      - pgladmin_data:/var/lib/pgadmin
-    restart: unless-stopped
-    networks:
-      - postgres_network
-
 volumes:
-  postgres_master_data:
-  postgres_slave_data:
-  pgladmin_data:
+  postgres_data:
 
 networks:
   postgres_network:
