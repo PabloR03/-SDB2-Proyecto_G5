@@ -1,7 +1,6 @@
 -- Crear el esquema
 CREATE SCHEMA IF NOT EXISTS imdb_schema;
 
--- Establecer el esquema por defecto para las tablas
 SET search_path TO imdb_schema, public;
 -- ================================
 -- TABLAS INDEPENDIENTES (SIN FK)
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Profesion (
     nombre VARCHAR(100) UNIQUE
 );
 
--- Tabla Persona (SIN restricciones CHECK)
+-- Tabla Persona 
 CREATE TABLE IF NOT EXISTS Persona (
     nconst VARCHAR(20) PRIMARY KEY,
     nombre_artistico TEXT,
@@ -61,7 +60,7 @@ CREATE TABLE IF NOT EXISTS Persona (
 -- TABLAS PRINCIPALES CON FK
 -- ================================
 
--- Tabla Titulo (SIN restricciones CHECK)
+-- Tabla Titulo 
 CREATE TABLE IF NOT EXISTS Titulo (
     tconst VARCHAR(20) PRIMARY KEY,
     id_categoria INTEGER REFERENCES Categoria(id_categoria),
@@ -87,11 +86,11 @@ CREATE TABLE IF NOT EXISTS Titulo_Alternativo (
 
 -- Tabla Produccion
 CREATE TABLE IF NOT EXISTS Produccion (
-    id_produccion SERIAL PRIMARY KEY,
+    id_produccion INTEGER PRIMARY KEY,
     tconst VARCHAR(20) UNIQUE REFERENCES Titulo(tconst) ON DELETE CASCADE
 );
 
--- Tabla Episodio (SIN restricciones CHECK)
+-- Tabla Episodio 
 CREATE TABLE IF NOT EXISTS Episodio (
     tconst VARCHAR(20) PRIMARY KEY REFERENCES Titulo(tconst) ON DELETE CASCADE,
     id_titulo VARCHAR(20) REFERENCES Titulo(tconst),
@@ -99,19 +98,17 @@ CREATE TABLE IF NOT EXISTS Episodio (
     episodio INTEGER
 );
 
--- Tabla Reparto (SIN restricciones CHECK)
+-- Tabla Reparto 
 CREATE TABLE IF NOT EXISTS Reparto (
-    id_reparto SERIAL PRIMARY KEY,
+    id_reparto INTEGER PRIMARY KEY,
     tconst VARCHAR(20) REFERENCES Titulo(tconst) ON DELETE CASCADE,
     relevancia INTEGER,
     nconst VARCHAR(20) REFERENCES Persona(nconst),
     id_profesion INTEGER REFERENCES Profesion(id_profesion),
     rol TEXT,
-    personaje TEXT,
-    CONSTRAINT uk_reparto_orden UNIQUE(tconst, relevancia)
+    personaje TEXT
 );
-
--- Tabla Puntuacion (SIN restricciones CHECK)
+-- Tabla Puntuacion 
 CREATE TABLE IF NOT EXISTS Puntuacion (
     id_puntuacion SERIAL PRIMARY KEY,
     tconst VARCHAR(20) UNIQUE REFERENCES Titulo(tconst) ON DELETE CASCADE,
@@ -125,10 +122,9 @@ CREATE TABLE IF NOT EXISTS Puntuacion (
 
 -- Tabla Genero_Titulo
 CREATE TABLE IF NOT EXISTS Genero_Titulo (
-    id_genero_titulo SERIAL PRIMARY KEY,
+    id_genero_titulo INTEGER PRIMARY KEY,
     tconst VARCHAR(20) REFERENCES Titulo(tconst) ON DELETE CASCADE,
-    id_genero INTEGER REFERENCES Genero(id_genero),
-    CONSTRAINT uk_genero_titulo UNIQUE(tconst, id_genero)
+    id_genero INTEGER REFERENCES Genero(id_genero)
 );
 
 -- Tabla Titulo_Alternativo_Atributo
@@ -149,10 +145,9 @@ CREATE TABLE IF NOT EXISTS Titulo_Alternativo_Tipo (
 
 -- Tabla Produccion_Escritor
 CREATE TABLE IF NOT EXISTS Produccion_Escritor (
-    id_produccion_escritor SERIAL PRIMARY KEY,
+    id_produccion_escritor INTEGER PRIMARY KEY,
     id_persona VARCHAR(20) REFERENCES Persona(nconst),
-    id_produccion INTEGER REFERENCES Produccion(id_produccion) ON DELETE CASCADE,
-    CONSTRAINT uk_produccion_escritor UNIQUE(id_persona, id_produccion)
+    id_produccion INTEGER REFERENCES Produccion(id_produccion) ON DELETE CASCADE
 );
 
 -- Tabla Produccion_Director
@@ -207,4 +202,4 @@ CREATE INDEX IF NOT EXISTS idx_puntuacion_promedio ON Puntuacion(promedio DESC) 
 CREATE INDEX IF NOT EXISTS idx_puntuacion_votos ON Puntuacion(votos DESC) WHERE votos IS NOT NULL;
 
 -- Mensaje de confirmación
-\echo 'Schema imdb_schema y todas las tablas creadas exitosamente sin restricciones CHECK!'
+\echo 'Schema imdb_schema y todas las tablas creadas exitosamente.'
