@@ -74,14 +74,13 @@ CREATE TABLE IF NOT EXISTS Titulo (
 
 -- Tabla Titulo_Alternativo
 CREATE TABLE IF NOT EXISTS Titulo_Alternativo (
-    id_titulo_alternativo SERIAL PRIMARY KEY,
+    id_titulo_alternativo INTEGER PRIMARY KEY,
     tconst VARCHAR(20) REFERENCES Titulo(tconst) ON DELETE CASCADE,
     orden INTEGER,
     nombre_titulo VARCHAR(255),
     id_region INTEGER REFERENCES Region(id_region),
     id_idioma INTEGER REFERENCES Idioma(id_idioma),
-    es_original BOOLEAN DEFAULT FALSE,
-    CONSTRAINT uk_titulo_orden UNIQUE(tconst, orden)
+    es_original BOOLEAN DEFAULT FALSE
 );
 
 -- Tabla Produccion
@@ -129,18 +128,16 @@ CREATE TABLE IF NOT EXISTS Genero_Titulo (
 
 -- Tabla Titulo_Alternativo_Atributo
 CREATE TABLE IF NOT EXISTS Titulo_Alternativo_Atributo (
-    id_titulo_alternativo_atributo SERIAL PRIMARY KEY,
+    id_titulo_alternativo_atributo INTEGER PRIMARY KEY,
     id_titulo_alternativo INTEGER REFERENCES Titulo_Alternativo(id_titulo_alternativo) ON DELETE CASCADE,
-    id_atributo INTEGER REFERENCES Atributo(id_atributo),
-    CONSTRAINT uk_alt_titulo_atributo UNIQUE(id_titulo_alternativo, id_atributo)
+    id_atributo INTEGER REFERENCES Atributo(id_atributo)
 );
 
 -- Tabla Titulo_Alternativo_Tipo
 CREATE TABLE IF NOT EXISTS Titulo_Alternativo_Tipo (
-    id_titulo_alternativo_tipo SERIAL PRIMARY KEY,
+    id_titulo_alternativo_tipo INTEGER PRIMARY KEY,
     id_titulo_alternativo INTEGER REFERENCES Titulo_Alternativo(id_titulo_alternativo) ON DELETE CASCADE,
-    id_tipo INTEGER REFERENCES Tipo_Titulo(id_tipo),
-    CONSTRAINT uk_alt_titulo_tipo UNIQUE(id_titulo_alternativo, id_tipo)
+    id_tipo INTEGER REFERENCES Tipo_Titulo(id_tipo)
 );
 
 -- Tabla Produccion_Escritor
