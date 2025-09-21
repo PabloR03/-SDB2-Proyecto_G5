@@ -152,26 +152,22 @@ CREATE TABLE IF NOT EXISTS Produccion_Escritor (
 
 -- Tabla Produccion_Director
 CREATE TABLE IF NOT EXISTS Produccion_Director (
-    id_produccion_director SERIAL PRIMARY KEY,
+    id_produccion_director INTEGER PRIMARY KEY,
     id_persona VARCHAR(20) REFERENCES Persona(nconst),
-    id_produccion INTEGER REFERENCES Produccion(id_produccion) ON DELETE CASCADE,
-    CONSTRAINT uk_produccion_director UNIQUE(id_persona, id_produccion)
+    id_produccion INTEGER REFERENCES Produccion(id_produccion) ON DELETE CASCADE
 );
 
 -- Tabla Profesion_Persona_Top
 CREATE TABLE IF NOT EXISTS Profesion_Persona_Top (
-    id_profesion_persona SERIAL PRIMARY KEY,
+    id_profesion_persona INTEGER PRIMARY KEY,
     nconst VARCHAR(20) REFERENCES Persona(nconst) ON DELETE CASCADE,
-    id_profesion INTEGER REFERENCES Profesion(id_profesion),
-    CONSTRAINT uk_profesion_persona UNIQUE(nconst, id_profesion)
+    id_profesion INTEGER REFERENCES Profesion(id_profesion)
 );
-
 -- Tabla Pelicula_Persona_Top
 CREATE TABLE IF NOT EXISTS Pelicula_Persona_Top (
-    id_titulo_persona SERIAL PRIMARY KEY,
+    id_titulo_persona INTEGER PRIMARY KEY,
     nconst VARCHAR(20) REFERENCES Persona(nconst) ON DELETE CASCADE,
-    tconst VARCHAR(20) REFERENCES Titulo(tconst),
-    CONSTRAINT uk_titulo_persona UNIQUE(nconst, tconst)
+    tconst VARCHAR(20) REFERENCES Titulo(tconst)
 );
 
 -- ================================
