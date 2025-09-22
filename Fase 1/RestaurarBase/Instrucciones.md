@@ -34,5 +34,3 @@
    ```sql
    \dt
    ```
-
-   (Deberías ver tus tablas).
