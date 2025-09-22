@@ -224,7 +224,7 @@ BEGIN
 END;
 $$;
 
--- Ejemplo 1: Consultar información de un título específico
+-- Ejemplos 
 -- CALL sp_mostrar_informacion_titulo('tt0111161');
 -- CALL sp_mostrar_informacion_titulo('tt0468569');
 -- CALL sp_mostrar_informacion_titulo('tt0120338');
